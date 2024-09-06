@@ -12,7 +12,29 @@ import path from 'path';
 app.use(cors());
 
 // Middleware
-app.use(json()); // For parsing application/json
+app.use(json());
+
+// Create __filename and __dirname equivalents
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Serve static images from the 'images' folder
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+// API route to get an image by filename
+app.get('/image/:filename', (req, res) => {
+  const filename = req.params.filename;
+  var imagePath = path.join(__dirname, 'images', filename);
+  imagePath += '.png';
+
+  // Check if image exists and send it
+  res.sendFile(imagePath, (err) => {
+    if (err) {
+      console.error("Error sending image: ", err);
+      res.status(404).send('Image not found');
+    }
+  });
+});
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -25,10 +47,6 @@ const transporter = nodemailer.createTransport({
 });
 
 import { fileURLToPath } from 'url';
-
-// Create __filename and __dirname equivalents
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 app.get('/ancient/data', (req, res) => {
   const filePath = path.join(__dirname, 'data', 'ancient', 'ancient.json');
