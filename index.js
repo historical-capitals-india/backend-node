@@ -91,9 +91,7 @@ app.get('/ancient/location', (req, res) => {
 
 
 app.get('/medieval/data', (req, res) => {
-  console.log("we are here in medieval data");
   const filePath = path.join(__dirname, 'data', 'medieval', 'medieval.json');
-  console.log("filepath-data: ", filePath);
   
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
@@ -112,9 +110,7 @@ app.get('/medieval/data', (req, res) => {
 });
 
 app.get('/medieval/location', (req, res) => {
-  console.log("we are here in medieval location");
   const filePath = path.join(__dirname, 'data', 'medieval', 'location.json');
-  console.log("filepath: ", filePath);
 
   fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
