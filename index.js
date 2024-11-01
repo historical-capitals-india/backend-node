@@ -219,7 +219,6 @@ app.get('/all/location', (req, res) => {
 // Route to serve information based on the location
 app.get("/:location/info", (req, res) => {
   const location = req.params.location; // This will capture 'Rajgir' from the URL
-  console.log("Ancient info for:", location);
 
   // Example: Serve the correct file based on the location
   const filePath = path.join(__dirname, 'data', 'information', `${location.toLowerCase()}.txt`);
