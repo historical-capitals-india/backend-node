@@ -1,2 +1,4 @@
 node_modules
 .env
+create_file.py
+*.pdf
