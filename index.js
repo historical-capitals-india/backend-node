@@ -259,10 +259,10 @@ BTP-2`,
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      res.status(500).send('Error sending email');
+      return 500;
     } else {
       console.log('Email sent: ' + info.response);
-      res.status(200).send('Email sent');
+      return 200;
     }
   }
 )
@@ -281,10 +281,10 @@ Message: ${message}`,
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      res.status(500).send('Error sending email');
+      return 500;
     } else {
       console.log('Email sent: ' + info.response);
-      res.status(200).send('Email sent');
+      return 200;
     }
   }
 )
@@ -294,9 +294,9 @@ Message: ${message}`,
 app.post('/sendmail', (req, res) => {
   var { name, email, message } = req.body;
   const res1 = sendMailToUser(name, email, message);
-  if (res1.status === 200) {
+  if (res1 === 200) {
     const res2 = sendMailToAdmin(name, email, message);
-    if (res2.status === 200) {
+    if (res2 === 200) {
       res.status(200).send('Feedback sent successfully');
     } else {
       res.status(500).send('Error sending email');
