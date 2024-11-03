@@ -293,8 +293,19 @@ Message: ${message}`,
 // Define routes
 app.post('/sendmail', (req, res) => {
   var { name, email, message } = req.body;
-  sendMailToUser(name, email, message);
-  sendMailToAdmin(name, email, message);
+  const res = sendMailToUser(name, email, message);
+  if (res.status === 200) {
+    const res2 = sendMailToAdmin(name, email, message);
+    if (res2.status === 200) {
+      res.status(200).send('Email sent');
+    } else {
+      res.status(500).send('Error sending email');
+    }
+  }
+  else {
+    res.status(500).send('Error sending email');
+  }
+
 });
 
 // Start the server
