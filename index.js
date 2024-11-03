@@ -233,11 +233,7 @@ app.get("/:location/info", (req, res) => {
 });
 
 
-
-
-// Define routes
-app.post('/sendmail', (req, res) => {
-  var { name, email, message } = req.body;
+const sendMailToUser = (name, email, message) => {
   var mailOptions = {
     from: process.env.SMTP_MAIL,
     to: email,
@@ -270,6 +266,35 @@ BTP-2`,
     }
   }
 )
+};
+
+const sendMailToAdmin = (name, email, message) => {
+  var mailOptions = {
+    from: process.env.SMTP_MAIL,
+    to: process.env.ADMIN_MAIL,
+    subject: "Feedback from User",
+    text: `Name: ${name}
+Email: ${email}
+Message: ${message}`,
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      res.status(500).send('Error sending email');
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.status(200).send('Email sent');
+    }
+  }
+)
+};
+
+// Define routes
+app.post('/sendmail', (req, res) => {
+  var { name, email, message } = req.body;
+  sendMailToUser(name, email, message);
+  sendMailToAdmin(name, email, message);
 });
 
 // Start the server
