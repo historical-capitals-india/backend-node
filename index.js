@@ -293,8 +293,8 @@ Message: ${message}`,
 // Define routes
 app.post('/sendmail', (req, res) => {
   var { name, email, message } = req.body;
-  const res = sendMailToUser(name, email, message);
-  if (res.status === 200) {
+  const res1 = sendMailToUser(name, email, message);
+  if (res1.status === 200) {
     const res2 = sendMailToAdmin(name, email, message);
     if (res2.status === 200) {
       res.status(200).send('Feedback sent successfully');
