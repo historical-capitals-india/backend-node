@@ -233,8 +233,8 @@ app.get("/:location/info", (req, res) => {
 });
 
 
-const sendMailToUser = (name, email, message) => {
-  var mailOptions = {
+const sendMailToUser = async (name, email, message) => {
+  const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: email,
     subject: "Automated Feedback Acknowledgement",
@@ -253,60 +253,55 @@ ${message}
 
 Best regards,
 BTP-2`,
-  }
-  
+  };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return 500;
-    } else {
-      console.log('Email sent: ' + info.response);
-      return 200;
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('User email sent: ' + info.response);
+    return 200;
+  } catch (error) {
+    console.log(error);
+    return 500;
   }
-)
 };
 
-const sendMailToAdmin = (name, email, message) => {
-  var mailOptions = {
+const sendMailToAdmin = async (name, email, message) => {
+  const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: process.env.ADMIN_MAIL,
     subject: "Feedback from User",
     text: `Name: ${name}
 Email: ${email}
 Message: ${message}`,
-  }
+  };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      return 500;
-    } else {
-      console.log('Email sent: ' + info.response);
-      return 200;
-    }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Admin email sent: ' + info.response);
+    return 200;
+  } catch (error) {
+    console.log(error);
+    return 500;
   }
-)
 };
 
 // Define routes
-app.post('/sendmail', (req, res) => {
-  var { name, email, message } = req.body;
-  const res1 = sendMailToUser(name, email, message);
+app.post('/sendmail', async (req, res) => {
+  const { name, email, message } = req.body;
+  
+  const res1 = await sendMailToUser(name, email, message);
   if (res1 === 200) {
-    const res2 = sendMailToAdmin(name, email, message);
+    const res2 = await sendMailToAdmin(name, email, message);
     if (res2 === 200) {
       res.status(200).send('Feedback sent successfully');
     } else {
-      res.status(500).send('Error sending email');
+      res.status(500).send('Error sending email to admin');
     }
+  } else {
+    res.status(500).send('Error sending email to user');
   }
-  else {
-    res.status(500).send('Error sending email');
-  }
-
 });
+
 
 // Start the server
 app.listen(port, () => {
