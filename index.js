@@ -297,7 +297,7 @@ app.post('/sendmail', (req, res) => {
   if (res.status === 200) {
     const res2 = sendMailToAdmin(name, email, message);
     if (res2.status === 200) {
-      res.status(200).send('Email sent');
+      res.status(200).send('Feedback sent successfully');
     } else {
       res.status(500).send('Error sending email');
     }
