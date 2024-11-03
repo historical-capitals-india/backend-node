@@ -269,7 +269,7 @@ const sendMailToAdmin = async (name, email, message) => {
   const mailOptions = {
     from: process.env.SMTP_MAIL,
     to: process.env.ADMIN_MAIL,
-    subject: "Feedback from User",
+    subject: `Feedback from ${name}`,
     text: `Name: ${name}
 Email: ${email}
 Message: ${message}`,
